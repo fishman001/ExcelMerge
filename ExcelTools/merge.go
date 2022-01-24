@@ -16,7 +16,7 @@ func MergeExcel(filePathList []string, sheetNameList []string) error {
 	for i, filePath := range filePathList {
 		file, err := excelize.OpenFile(filePath)
 		if err != nil {
-			logging.Warnln(err)
+			logging.Warnf("读取文件[%s]失败：%s\n", filePath, err)
 			continue
 		}
 		fileList = append(fileList, file)
