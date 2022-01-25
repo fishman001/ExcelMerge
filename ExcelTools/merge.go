@@ -11,6 +11,8 @@ import (
 var logging = logger.GetStdLogger()
 
 func MergeExcel(filePathList []string, sheetNameList []string) error {
+	fmt.Printf("%q", sheetNameList)
+	fmt.Println(len(sheetNameList))
 	var fileList []*excelize.File
 	logging.Infoln("开始读取文件...")
 	for i, filePath := range filePathList {
@@ -76,7 +78,7 @@ func MergeExcel(filePathList []string, sheetNameList []string) error {
 
 	newFile.DeleteSheet("Sheet1")
 	for name, rows := range mergeSheetData {
-		logging.Infof("开始写入sheet：%s", name)
+		logging.Infof("开始写入sheet：[%s]", name)
 		newFile.NewSheet(name)
 		streamWriter, err := newFile.NewStreamWriter(name)
 		if err != nil {

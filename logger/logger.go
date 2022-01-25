@@ -2,8 +2,12 @@ package logger
 
 import (
 	"github.com/sirupsen/logrus"
+	"io"
 	"log"
+	"os"
+	"path"
 	"strings"
+	"time"
 )
 
 func init() {
@@ -34,13 +38,29 @@ func initStdLogger() {
 	logger := logrus.StandardLogger()
 	logger.SetLevel(logrus.InfoLevel)
 	// logger.SetReportCaller(true)
-	logger.SetFormatter(&logrus.TextFormatter{ForceColors: true})
+	logger.SetFormatter(&logrus.TextFormatter{ForceColors: false})
 	StdLogger = &Logger{
 		logger,
+	}
+	writer, err := mkLogFile()
+	if err != nil {
+		log.Println(err)
+	} else {
+		logger.SetOutput(writer)
 	}
 	log.SetOutput(logger.Writer())
 }
 
 func GetStdLogger() *Logger {
 	return StdLogger
+}
+
+func mkLogFile() (io.Writer, error) {
+	format := time.Now().Format("ExcelMerge-200601021504.log")
+	writer, err := os.OpenFile(path.Join(".", format), os.O_CREATE|os.O_WRONLY, 0764)
+	if err != nil {
+		return nil, err
+	}
+	return writer, nil
+
 }
